@@ -21,6 +21,18 @@ const payments = {};       // Format: { paymentId: { amount, status, ... } }
 const generateId = (prefix) => `${prefix}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
 
 // ==========================================
+// ROOT ROUTE: CONNECTION VERIFICATION
+// ==========================================
+app.get('/', (req, res) => {
+  res.json({
+    status: "online",
+    message: "Connection successful! Stock Management Backend API is active and running.",
+    timestamp: new Date().toISOString(),
+    environment: process.env.PORT ? "Railway Cloud" : "Local Machine"
+  });
+});
+
+// ==========================================
 // STAGE 1: ONBOARDING & OTP AUTHENTICATION
 // ==========================================
 
@@ -195,7 +207,7 @@ app.get('/api/payment/status/:paymentId', (req, res) => {
   res.json(payment);
 });
 
-// Start listening for traffic
-app.listen(PORT, () => {
+// Start listening for traffic on 0.0.0.0 to safely bind on cloud providers
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running successfully on port ${PORT}`);
 });
